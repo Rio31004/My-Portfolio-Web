@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSN Designs — Brand Identity Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --deep: #0f0f0f;
+    --carbon: #141414;
+    --panel: #1a1a1a;
+    --chrome: #e8e8e8;
+    --chrome-dim: #a0a0a0;
+    --red: #c8102e;
+    --red-glow: #ff1a3a;
+    --gold: #c9a84c;
+    --white: #f5f5f5;
+    --gap: clamp(1rem, 3vw, 2.5rem);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--chrome);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    background: var(--red); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid rgba(200,16,46,0.5); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s, opacity 0.3s;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.98), transparent);
+    border-bottom: 1px solid rgba(200,16,46,0.12);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 0.15em;
+    color: var(--white);
+  }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--chrome-dim); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--red); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative; overflow: hidden;
+    background: var(--black);
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(200,16,46,0.07) 0%, transparent 60%),
+      repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px),
+      repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px);
+  }
+  .hero-image-slot {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 3rem;
+  }
+  .hero-img-frame {
+    width: clamp(300px, 55vw, 820px);
+    height: clamp(300px, 55vh, 600px);
+    position: relative;
+  }
+  .hero-img-frame::before {
+    content: '';
+    position: absolute; inset: 0;
+    border: 1px solid rgba(200,16,46,0.3);
+    clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+  }
+  .hero-img-frame::after {
+    content: '';
+    position: absolute; inset: -6px;
+    border: 1px solid rgba(200,16,46,0.1);
+    clip-path: polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px);
+  }
+  .img-placeholder {
+    width: 100%; height: 100%;
+    background: var(--carbon);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1rem; position: relative; overflow: hidden;
+    clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+  }
+  .img-placeholder input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2;
+  }
+  .img-placeholder img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: none; z-index: 1;
+  }
+  .upload-icon {
+    width: 48px; height: 48px;
+    border: 1px solid rgba(200,16,46,0.4);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red); font-size: 1.4rem;
+    clip-path: polygon(4px 0%, 100% 0%, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0% 100%, 0% 4px);
+  }
+  .upload-hint {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(160,160,160,0.4);
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 600px; }
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 40px; height: 1px; background: var(--red);
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 9vw, 9rem);
+    line-height: 0.92; letter-spacing: 0.02em;
+    color: var(--white);
+  }
+  .hero-title .accent { color: var(--red); }
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 0.95rem; font-weight: 300; line-height: 1.7;
+    color: var(--chrome-dim); max-width: 420px;
+  }
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: flex; gap: 1.5rem; align-items: center;
+  }
+  .btn-primary {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--white); background: var(--red);
+    padding: 0.9rem 2.2rem; text-decoration: none;
+    clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--red-glow); }
+  .btn-ghost {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--chrome-dim); text-decoration: none;
+    display: flex; align-items: center; gap: 0.6rem;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--white); }
+  .hero-stats {
+    position: absolute; right: 3rem; bottom: 5rem; z-index: 2;
+    display: flex; flex-direction: column; gap: 0.3rem; text-align: right;
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; letter-spacing: 0.05em; color: var(--white); line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--chrome-dim);
+  }
+
+  /* SECTION BASE */
+  section { padding: 6rem 3rem; position: relative; }
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::before { content: ''; display: block; width: 30px; height: 1px; background: var(--red); }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    letter-spacing: 0.03em; line-height: 1; color: var(--white);
+  }
+  .section-title .dim { color: rgba(255,255,255,0.2); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(200,16,46,0.3) 20%, rgba(200,16,46,0.3) 80%, transparent);
+    margin: 0 3rem;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px; margin-top: 4rem;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .service-card {
+    background: var(--carbon);
+    padding: 2.5rem 2rem;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .service-card:hover { background: #1c1c1c; }
+  .service-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--red);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem; color: rgba(200,16,46,0.15);
+    line-height: 1; margin-bottom: 1rem;
+  }
+  .service-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.15rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--white); margin-bottom: 0.8rem;
+  }
+  .service-desc { font-size: 0.85rem; line-height: 1.7; color: var(--chrome-dim); }
+
+  /* PORTFOLIO GRID */
+  .portfolio-section { background: var(--deep); }
+  .portfolio-filter {
+    display: flex; gap: 0; margin-top: 3rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    width: fit-content;
+  }
+  .filter-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--chrome-dim); background: none; border: none;
+    padding: 0.7rem 1.4rem; cursor: pointer;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    transition: color 0.2s, background 0.2s;
+  }
+  .filter-btn:last-child { border-right: none; }
+  .filter-btn.active { color: var(--white); background: var(--red); }
+  .filter-btn:not(.active):hover { color: var(--white); background: var(--panel); }
+
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px; margin-top: 2rem;
+    background: rgba(255,255,255,0.04);
+  }
+  .work-item {
+    position: relative; overflow: hidden;
+    background: var(--carbon);
+    aspect-ratio: 4/3;
+  }
+  .work-item.large { grid-column: span 7; aspect-ratio: 16/10; }
+  .work-item.medium { grid-column: span 5; aspect-ratio: 4/3; }
+  .work-item.small { grid-column: span 4; aspect-ratio: 4/3; }
+  .work-item.wide { grid-column: span 8; aspect-ratio: 16/9; }
+  .work-item.narrow { grid-column: span 4; aspect-ratio: 3/4; }
+  .work-item .img-placeholder { aspect-ratio: unset; height: 100%; }
+  .work-overlay {
+    position: absolute; inset: 0; z-index: 3;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 1.5rem;
+  }
+  .work-item:hover .work-overlay { opacity: 1; }
+  .work-cat {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 0.3rem;
+  }
+  .work-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 500; text-transform: uppercase;
+    color: var(--white);
+  }
+  .work-tag {
+    position: absolute; top: 1rem; left: 1rem; z-index: 4;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+    background: var(--red); color: var(--white);
+    padding: 0.25rem 0.7rem;
+  }
+
+  /* NICHES */
+  .niches-section { background: var(--black); }
+  .niches-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--gap); margin-top: 4rem;
+  }
+  .niche-card {
+    position: relative; overflow: hidden;
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .niche-image {
+    aspect-ratio: 3/2;
+    position: relative; overflow: hidden;
+  }
+  .niche-image .img-placeholder { height: 100%; }
+  .niche-content { padding: 1.8rem; }
+  .niche-icon {
+    font-size: 1.4rem; margin-bottom: 1rem;
+    width: 44px; height: 44px;
+    border: 1px solid rgba(200,16,46,0.35);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .niche-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--white); margin-bottom: 0.5rem;
+  }
+  .niche-desc { font-size: 0.82rem; line-height: 1.65; color: var(--chrome-dim); }
+
+  /* PROCESS */
+  .process-section { background: var(--carbon); }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0; margin-top: 4rem;
+    position: relative;
+  }
+  .process-steps::after {
+    content: '';
+    position: absolute; top: 2.5rem; left: 0; right: 0;
+    height: 1px; background: rgba(200,16,46,0.2);
+  }
+  .step {
+    padding: 0 2rem 2.5rem; position: relative;
+  }
+  .step-dot {
+    width: 16px; height: 16px;
+    background: var(--carbon); border: 2px solid var(--red);
+    position: relative; z-index: 1; margin-bottom: 2rem;
+    clip-path: polygon(2px 0%, 100% 0%, 100% calc(100% - 2px), calc(100% - 2px) 100%, 0% 100%, 0% 2px);
+  }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem; color: rgba(200,16,46,0.1);
+    line-height: 1; margin-bottom: 0.5rem;
+  }
+  .step-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.95rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--white); margin-bottom: 0.6rem;
+  }
+  .step-desc { font-size: 0.82rem; line-height: 1.6; color: var(--chrome-dim); }
+
+  /* TOOLKIT */
+  .tools-section { background: var(--deep); }
+  .tools-grid {
+    display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 3rem;
+  }
+  .tool-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--chrome-dim);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .tool-badge:hover { border-color: var(--red); color: var(--white); }
+  .tool-badge.primary {
+    background: var(--red); border-color: var(--red); color: var(--white);
+    font-weight: 500;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    background: var(--black); position: relative; overflow: hidden;
+  }
+  .contact-section::before {
+    content: 'HSN';
+    position: absolute; right: -2rem; bottom: -4rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22vw; color: rgba(200,16,46,0.04);
+    line-height: 1; user-select: none; pointer-events: none;
+  }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; margin-top: 4rem;
+  }
+  .contact-info { }
+  .contact-intro {
+    font-size: 1.05rem; line-height: 1.75;
+    color: var(--chrome-dim); max-width: 380px;
+    margin-bottom: 3rem;
+  }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    margin-bottom: 1.8rem;
+  }
+  .contact-item-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--red); min-width: 80px;
+  }
+  .contact-item-val {
+    font-size: 0.9rem; color: var(--white);
+  }
+  .contact-form-area { }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group input, .form-group textarea {
+    width: 100%;
+    background: var(--carbon);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: var(--white); padding: 0.9rem 1.1rem;
+    font-family: 'Barlow', sans-serif; font-size: 0.88rem; font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s;
+    clip-path: polygon(4px 0%, 100% 0%, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0% 100%, 0% 4px);
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder {
+    color: rgba(160,160,160,0.35);
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.72rem;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    border-color: rgba(200,16,46,0.4);
+  }
+  .form-group textarea { resize: vertical; min-height: 130px; }
+  .form-submit {
+    width: 100%;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--white); background: var(--red); border: none;
+    padding: 1rem; cursor: pointer;
+    clip-path: polygon(6px 0%, 100% 0%, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0% 100%, 0% 6px);
+    transition: background 0.2s;
+  }
+  .form-submit:hover { background: var(--red-glow); }
+
+  /* FOOTER */
+  footer {
+    background: var(--carbon);
+    border-top: 1px solid rgba(200,16,46,0.15);
+    padding: 2.5rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem; letter-spacing: 0.15em;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--red); }
+  .footer-copy {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(160,160,160,0.35);
+  }
+  .footer-socials { display: flex; gap: 1.2rem; }
+  .footer-socials a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--chrome-dim); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-socials a:hover { color: var(--red); }
+
+  /* Scanline overlay */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 500;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px);
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 0 1.5rem 4rem; }
+    .hero-image-slot { display: none; }
+    .hero-stats { display: none; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .work-item.large, .work-item.medium, .work-item.small,
+    .work-item.wide, .work-item.narrow { grid-column: span 12; }
+    footer { flex-direction: column; gap: 1.2rem; text-align: center; }
+    .divider { margin: 0 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">HSN<span>.</span></div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#works">Works</a>
+    <a href="#niches">Industries</a>
+    <a href="#process">Process</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-image-slot">
+    <div class="hero-img-frame">
+      <div class="img-placeholder" id="heroSlot">
+        <input type="file" accept="image/*" onchange="loadImg(this,'heroSlot')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Drop hero image here</span>
+        <img id="heroSlot-img" alt="Hero">
+      </div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Full Stack Brand Identity</div>
+    <h1 class="hero-title">
+      HSN<br><span class="accent">DESIGNS</span>
+    </h1>
+    <p class="hero-sub">
+      Crafting iconic brand identities across automotive, lifestyle, cosmetics & beyond — from Photoshop to billboard, every pixel engineered with intent.
+    </p>
+    <div class="hero-cta">
+      <a href="#works" class="btn-primary">View Portfolio</a>
+      <a href="#contact" class="btn-ghost">
+        <span>Get in touch</span>
+        <span>→</span>
+      </a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">7+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <br>
+    <div>
+      <div class="stat-num">150+</div>
+      <div class="stat-label">Projects Delivered</div>
+    </div>
+    <br>
+    <div>
+      <div class="stat-num">40+</div>
+      <div class="stat-label">Brands Built</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">What I Do</div>
+  <h2 class="section-title">Full Stack <span class="dim">Branding</span></h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-name">Brand Identity</div>
+      <p class="service-desc">Logo systems, brand guidelines, visual language architecture — built to dominate every touchpoint from app icon to showroom signage.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-name">Social Visuals</div>
+      <p class="service-desc">Scroll-stopping content for Instagram, Facebook, LinkedIn & beyond. Posts, stories, reels covers — designed to outperform the algorithm.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-name">Billboards & OOH</div>
+      <p class="service-desc">Large-format outdoor advertising designed at print resolution. Whether it's a 48-sheet or a building wrap — impact at scale.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-name">Packaging Design</div>
+      <p class="service-desc">Product packaging that commands shelf attention — cosmetics, supplements, food & beverage, automotive accessories.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-name">Marketing Collateral</div>
+      <p class="service-desc">Brochures, catalogues, trade show materials, product launch kits. Cohesive print & digital collateral that converts.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-name">Vehicle Branding</div>
+      <p class="service-desc">Full vehicle wraps, livery design, fleet branding. Automotive identity that turns every road into a campaign.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PORTFOLIO -->
+<section class="portfolio-section" id="works">
+  <div class="section-label">Selected Works</div>
+  <h2 class="section-title">Portfolio <span class="dim">Gallery</span></h2>
+
+  <div class="portfolio-filter">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Automotive</button>
+    <button class="filter-btn">Food</button>
+    <button class="filter-btn">Cosmetics</button>
+    <button class="filter-btn">Supplements</button>
+    <button class="filter-btn">Social</button>
+  </div>
+
+  <div class="works-grid">
+
+    <!-- Row 1 -->
+    <div class="work-item large">
+      <div class="work-tag">Automotive</div>
+      <div class="img-placeholder" id="w1">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w1')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w1-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Brand Identity · Automotive</div>
+        <div class="work-title">Performance Auto — Brand Rebrand</div>
+      </div>
+    </div>
+
+    <div class="work-item medium">
+      <div class="img-placeholder" id="w2">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w2')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w2-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Packaging · Supplements</div>
+        <div class="work-title">Sport Nutrition — Label Design</div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="work-item small">
+      <div class="work-tag">Cosmetics</div>
+      <div class="img-placeholder" id="w3">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w3')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w3-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Brand Identity · Cosmetics</div>
+        <div class="work-title">Luxe Skin — Identity</div>
+      </div>
+    </div>
+
+    <div class="work-item medium">
+      <div class="img-placeholder" id="w4">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w4')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w4-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Social Visuals · Automotive</div>
+        <div class="work-title">Turbo Parts — Campaign</div>
+      </div>
+    </div>
+
+    <div class="work-item small">
+      <div class="img-placeholder" id="w5">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w5')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w5-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Packaging · Perfume</div>
+        <div class="work-title">Noir Fragrance — Box Design</div>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="work-item wide">
+      <div class="work-tag">Billboard</div>
+      <div class="img-placeholder" id="w6">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w6')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w6-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">OOH · Automotive</div>
+        <div class="work-title">Apex Motors — Billboard Series</div>
+      </div>
+    </div>
+
+    <div class="work-item narrow">
+      <div class="img-placeholder" id="w7">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w7')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w7-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Social · Food</div>
+        <div class="work-title">Urban Kitchen — Reels</div>
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="work-item small">
+      <div class="img-placeholder" id="w8">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w8')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w8-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Vehicle Wrap · Automotive</div>
+        <div class="work-title">Rally Car — Full Livery</div>
+      </div>
+    </div>
+
+    <div class="work-item small">
+      <div class="img-placeholder" id="w9">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w9')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w9-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Brand Identity · Supplements</div>
+        <div class="work-title">Peak Lab — Brand System</div>
+      </div>
+    </div>
+
+    <div class="work-item small">
+      <div class="img-placeholder" id="w10">
+        <input type="file" accept="image/*" onchange="loadImg(this,'w10')">
+        <div class="upload-icon">+</div>
+        <span class="upload-hint">Upload image</span>
+        <img id="w10-img" alt="">
+      </div>
+      <div class="work-overlay">
+        <div class="work-cat">Packaging · Food</div>
+        <div class="work-title">Spice Co. — Packaging Range</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- NICHES -->
+<section class="niches-section" id="niches">
+  <div class="section-label">Industries</div>
+  <h2 class="section-title">Every <span class="dim">Niche</span></h2>
+  <div class="niches-row">
+
+    <div class="niche-card">
+      <div class="niche-image">
+        <div class="img-placeholder" id="n1">
+          <input type="file" accept="image/*" onchange="loadImg(this,'n1')">
+          <div class="upload-icon">+</div>
+          <span class="upload-hint">Automotive image</span>
+          <img id="n1-img" alt="">
+        </div>
+      </div>
+      <div class="niche-content">
+        <div class="niche-icon">🚗</div>
+        <div class="niche-name">Automotive</div>
+        <p class="niche-desc">Dealerships, performance shops, detailing brands, tuning companies, racing teams. Visual identities built for speed and dominance.</p>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-image">
+        <div class="img-placeholder" id="n2">
+          <input type="file" accept="image/*" onchange="loadImg(this,'n2')">
+          <div class="upload-icon">+</div>
+          <span class="upload-hint">Cosmetics image</span>
+          <img id="n2-img" alt="">
+        </div>
+      </div>
+      <div class="niche-content">
+        <div class="niche-icon">💄</div>
+        <div class="niche-name">Cosmetics & Perfume</div>
+        <p class="niche-desc">Beauty brands, fragrance houses, skincare lines. Luxury packaging and identity systems that command premium shelf positioning.</p>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-image">
+        <div class="img-placeholder" id="n3">
+          <input type="file" accept="image/*" onchange="loadImg(this,'n3')">
+          <div class="upload-icon">+</div>
+          <span class="upload-hint">Supplements image</span>
+          <img id="n3-img" alt="">
+        </div>
+      </div>
+      <div class="niche-content">
+        <div class="niche-icon">💊</div>
+        <div class="niche-name">Supplements</div>
+        <p class="niche-desc">Sports nutrition, health supplements, wellness brands. High-impact packaging and social content that builds trust and drives conversion.</p>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-image">
+        <div class="img-placeholder" id="n4">
+          <input type="file" accept="image/*" onchange="loadImg(this,'n4')">
+          <div class="upload-icon">+</div>
+          <span class="upload-hint">Food brand image</span>
+          <img id="n4-img" alt="">
+        </div>
+      </div>
+      <div class="niche-content">
+        <div class="niche-icon">🍽️</div>
+        <div class="niche-name">Food & Beverage</div>
+        <p class="niche-desc">Restaurants, cafes, food products, FMCG. Menu design, product labels, social content and full brand rollouts that drive appetite and loyalty.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROCESS -->
+<section class="process-section" id="process">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">The <span class="dim">Process</span></h2>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-dot"></div>
+      <div class="step-num">01</div>
+      <div class="step-title">Discovery</div>
+      <p class="step-desc">Deep dive into your brand — market position, competitors, target audience, and the story you need to tell.</p>
+    </div>
+    <div class="step">
+      <div class="step-dot"></div>
+      <div class="step-num">02</div>
+      <div class="step-title">Concept</div>
+      <p class="step-desc">Mood boards, visual directions, and strategic references. Aligning aesthetics with commercial goals before a pixel is placed.</p>
+    </div>
+    <div class="step">
+      <div class="step-dot"></div>
+      <div class="step-num">03</div>
+      <div class="step-title">Design</div>
+      <p class="step-desc">Built in Adobe Photoshop at print-ready resolution. Every element crafted with precision — from micro-detail to macro impact.</p>
+    </div>
+    <div class="step">
+      <div class="step-dot"></div>
+      <div class="step-num">04</div>
+      <div class="step-title">Refine</div>
+      <p class="step-desc">Two rounds of revisions included. Feedback integrated precisely until every version meets the brief and exceeds expectations.</p>
+    </div>
+    <div class="step">
+      <div class="step-dot"></div>
+      <div class="step-num">05</div>
+      <div class="step-title">Deliver</div>
+      <p class="step-desc">Export packages for every medium — print, digital, social, outdoor. Ready to deploy on day one, at any size, on any surface.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TOOLKIT -->
+<section class="tools-section">
+  <div class="section-label">Creative Arsenal</div>
+  <h2 class="section-title">Tools & <span class="dim">Skills</span></h2>
+  <div class="tools-grid">
+    <div class="tool-badge primary">Adobe Photoshop</div>
+    <div class="tool-badge">Adobe Illustrator</div>
+    <div class="tool-badge">Adobe InDesign</div>
+    <div class="tool-badge">Adobe After Effects</div>
+    <div class="tool-badge">Lightroom</div>
+    <div class="tool-badge">Brand Identity</div>
+    <div class="tool-badge">Logo Design</div>
+    <div class="tool-badge">Packaging</div>
+    <div class="tool-badge">Billboard Design</div>
+    <div class="tool-badge">Vehicle Wraps</div>
+    <div class="tool-badge">Social Media Graphics</div>
+    <div class="tool-badge">Print Design</div>
+    <div class="tool-badge">Typography</div>
+    <div class="tool-badge">Color Theory</div>
+    <div class="tool-badge">Retouching</div>
+    <div class="tool-badge">Compositing</div>
+    <div class="tool-badge">Photo Manipulation</div>
+    <div class="tool-badge">Brand Guidelines</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-label">Let's Build</div>
+  <h2 class="section-title">Get In <span class="dim">Touch</span></h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p class="contact-intro">
+        Ready to build a brand that commands attention? Whether it's a full identity from scratch or a single campaign — let's talk about what your brand needs to dominate.
+      </p>
+      <div class="contact-item">
+        <div class="contact-item-label">Studio</div>
+        <div class="contact-item-val">HSN Designs</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">Speciality</div>
+        <div class="contact-item-val">Full Stack Brand Identity &amp; Visual Design</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">Software</div>
+        <div class="contact-item-val">Adobe Photoshop Expert</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">Available</div>
+        <div class="contact-item-val" style="color: #4caf50;">Open for Projects</div>
+      </div>
+    </div>
+    <div class="contact-form-area">
+      <div class="form-group">
+        <input type="text" placeholder="Your Name">
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Email Address">
+      </div>
+      <div class="form-group">
+        <input type="text" placeholder="Brand / Company">
+      </div>
+      <div class="form-group">
+        <textarea placeholder="Tell me about your project..."></textarea>
+      </div>
+      <button class="form-submit">Send Message →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HSN<span>.</span></div>
+  <div class="footer-copy">© 2025 HSN Designs · All Rights Reserved</div>
+  <div class="footer-socials">
+    <a href="#">Instagram</a>
+    <a href="#">Behance</a>
+    <a href="#">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('curRing');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 60);
+  });
+
+  // Image loader
+  function loadImg(input, slotId) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById(slotId + '-img');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      const slot = document.getElementById(slotId);
+      const icon = slot.querySelector('.upload-icon');
+      const hint = slot.querySelector('.upload-hint');
+      if (icon) icon.style.display = 'none';
+      if (hint) hint.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Filter buttons (visual only)
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Entrance animations
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.service-card, .work-item, .niche-card, .step').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+    obs.observe(el);
+  });
+
+  // Form submit
+  document.querySelector('.form-submit').addEventListener('click', () => {
+    alert('Message sent! HSN Designs will get back to you shortly.');
+  });
+</script>
+</body>
+</html>
